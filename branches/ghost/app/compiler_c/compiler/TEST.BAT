@@ -1,0 +1,21 @@
+cl386 %1 %2
+if errorlevel 19 echo 19
+if errorlevel 18 echo 18
+if errorlevel 17 echo 17
+if errorlevel 16 echo 16
+if errorlevel 15 echo 15
+if errorlevel 14 echo 14
+if errorlevel 13 echo 13
+if errorlevel 12 echo 12
+if errorlevel 11 echo 11
+if errorlevel 10 echo 10
+if errorlevel 9 echo 9
+if errorlevel 8 echo 8
+if errorlevel 7 echo 7
+if errorlevel 6 echo 6
+if errorlevel 5 echo 5
+if errorlevel 4 echo 4
+if errorlevel 3 echo 3
+if errorlevel 2 echo 2
+if errorlevel 1 echo 1
+if errorlevel 0 echo 0

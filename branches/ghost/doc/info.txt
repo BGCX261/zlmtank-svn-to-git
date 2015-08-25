@@ -1,0 +1,100 @@
+操作系统实验
+
+
+1)硬件要求
+  IA32 兼容CPU
+  64M RAM
+  1.44M floppy/ide harddisk/cdrom
+  VESA2兼容显卡
+  soundblaster
+  ps/2 mouse/keyboard
+  
+2)系统特性
+  保护模式
+  分页/分段
+  多任务
+  最大支持4G内存
+  命令行/图形界面
+  网络/socket
+  绝对不是*nix
+
+
+1)启动
+系统启动,bios加载当前启动介质的第一个扇区(sect)到内存0x7c00处,并跳入0:7c00执行
+
+目前支持启动扇区类型
+bootfloppy.asm   软盘启动扇区记录(完成)
+bootCDROM.asm    光驱启动扇区记录
+bootHD.asm       硬盘启动扇区记录
+bootUboot.asm    U盘启动扇区记录
+？？？网络启动怎么搞？
+
+启动扇区加载当年前盘中ntdlr(ntldr16.asm + ntldr32pre.asm + ntldr32.c)文件加载到0x90000处,跳入0x90000执行
+
+2)加载内核
+
+ntldr文件分为两部分
++-----------------+-------------------+-----------------------+
++ ntldr16         +   ntldr32pre      +  ntldr32
++ 1024 byte       +   128 byte        +
++ 16bit opcode    +   32bit opcode    +  32bit c code entry
++-----------------+-------------------+-----------------------+
+1,bootsec找FAT表，吧ntldr加载到0x90000的位子，执行ntldr16的16位的代码
+2,ntldr16切换到保护模式,跳转到0x90400,ntldr32pre
+3,ntldr32pre吧ntldr32(0x90400+128)搬到0x100000(1M)的位子,执行真正的ntldr32.从此进入c入口
+
+
+
+
+
+
+note：ntldr被bootsec加载到0x90000,很有可能会吧后面的EBDA覆盖，v86模式可能玩不了了。。。
+先不玩了，以后要调整调整
+
+
+
+计算机bios执行后内存分布
+00000- 003FF                 IVT                        Interrupt Vector Table (中断向量表)
+00400- 004FF                 BDA                      BIOS Data Area (BIOS数据区)
+00500- 00501                 PRTSCR                   1st byte is Print Screen Status Byte (第一字节是打印屏幕状态字节)
+00501- 9xxxx                 OS                        OS specific (操作系统专用区)
+07C00- 07CFF                 BOOT                   Where Boot Sectors are loaded by the BIOS (BIOS装载引导扇区的区域)
+9XXXX- 9FFFF                 EBDA                   Extended BIOS Data Area, varies in size (at least 1KB) (扩展BIOS数据区,大小不等,不小于1KB)
+A0000 -AFFFF                 VIDEO                  Used by the Video Adapter (Graphics Mode) (用于彩色显示适配器)
+B0000 -B7FFF                VIDEO                  Used by the Video Adapter (Monochrome) (用于黑白显示适配器)
+B8000 -BFFFF                VIDEO                  Used by the Video Adapter (Textmode) (用于文本模式显示适配器)
+
+C0000- C7FFF                 VIDEO                Used by the Video BIOS (用于显示适配器BIOS)
+C8000- EFFFF                 ROM                   May be used by adapter ROMS or as memory mapped I/O 
+F0000- FFFFF                 BIOS                   System BIOS, 32K (starts at F8000) or 64K (系统BIOS,32k<从F8000开始>或者64K)
+
+
+
+我们对内存的规划
+0x00000000---0x00100000的位子保留原样
+0x00100000---0x
+
+
+
+
+
+4)分页与虚拟内存
+
+1，系统要求计算机至少需要64M物理内存,其中32M分配给操作系统,常驻物理内存,不可替换
+
+
+phy memory			linear memory
+
+
+0-1M
+0x0000 0000			0x0000 0000		1M
+0x000f ffff			0x000f ffff		reserved for bios
+
+1-2M
+0x0010 0000			0x0010 0000             1M
+0x001f ffff			0x001f ffff		ntldr
+
+
+2-32M
+0x0020 0000			0x8000 0000		30M
+0x0200 0000			0x8200 0000		ntoskernel

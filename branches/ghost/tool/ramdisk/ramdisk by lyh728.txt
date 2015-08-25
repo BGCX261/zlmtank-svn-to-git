@@ -1,0 +1,51 @@
+            gavotte  的 ramdisk  的gui前端
+				by lyh728
+
+更新 ：
+2004,5,20 
+          支持/L 和/S 参数，用于加载和存储镜像文件
+10.25
+          支持 新版本的ramdisk的DiskSizeK 参数，从而可以可以生成360k－2.88M的内存盘。
+          支持 直接加载和存储镜像文件，支持fat16，fat32,ntfs，不需要winimage 了，我甚至尝试了一下
+          一个linux的启动盘，也没有什么问题，只不过windows 不认识磁盘格式,但是vmware 可以通过
+          这个非fat格式的软盘启动（当然vmware可以直接用镜像文件启动，我这样是为了测试）。
+          支持命令行接口，可以把命令“ ramdisk imgfilename ” 放到启动脚本中。
+          bugfix：修正了更改设置后有时不能自动更新盘符的问题。
+          
+          现在 ，我觉得 对于 windows 2000以上的os，完全可以替代centrak 公司的 ramdisk NT 1.5和ramdisk Xp1.6，1.7，1.8，
+          而且现在这个功能更强大。
+
+gavotte  老大 写的ramdisk 简单实用，稳定性好.
+
+但是 如果要修改设置，需要运行regedit，然后 
+或者重启动
+或者 到设备管理器先禁用 ramdisk，再允许ramdisk
+修改的设置才会生效。
+
+对懒人来说，稍稍有些不方便
+于是有了下面这个 ramdisk 的gui前端，用来 安装，卸载，设置ramdisk
+我的gui 程序 仅仅修改最常用的选项，盘符，大小，类型
+不包括 ramdisk 的稍微复杂的功能，如 mount 到 ntfs ，pack 到image 等等。
+偶的程序界面 丑陋，不要笑话偶。
+用法：
+
+运行 ramdisk.exe
+
+
+一般，修改设置不需要重新启动，但是，如果有其他应用程序正在访问ramdisk，会要求reboot，这时最好关闭访问ramdisk的程序，值得注意的
+是ie的缓存，如果被设置到ramdisk，就会要求reboot，因为
+IE缓存在登陆后就被资源管理器打开了，即使没用IE也会被占住。方法是登陆另一个管理员账号，或者修改IE缓冲（修改IE缓冲也要求重新登陆）。
+
+by gavotte
+ADDSWAP.EXE
+RDPACK.EXE
+README.TXT	
+READMECHS.TXT	
+RRAMDISK.INF	
+RRAMDISK.SYS
+
+
+by lyh728
+ramdisk.exe	
+ramdisk by lyh728.txt
+

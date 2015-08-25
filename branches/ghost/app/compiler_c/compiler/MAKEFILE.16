@@ -1,0 +1,217 @@
+ #
+ # 68K/386 32-bit C compiler.
+ #
+ # copyright (c) 1996, David Lindauer
+ # 
+ # This compiler is intended for educational use.  It may not be used
+ # for profit without the express written consent of the author.
+ #
+ # It may be freely redistributed, as long as this notice remains intact
+ # and sources are distributed along with any executables derived from them.
+ #
+ # The author is not responsible for damages, either direct or consequential,
+ # that may arise from use of this software.
+ #
+ # v1.5 August 1996
+ # David Lindauer, gclind01@starbase.spd.louisville.edu
+ #
+ # Credits to Mathew Brandt for original K&R C compiler
+ #
+ #
+# This makefile is for Borland make (IBM PC/8086)
+.AUTODEPEND
+
+#		*Translator Definitions*
+# Comment this next line out to generate the 68k compiler
+# leave it in to generate the 386 compiler
+#i386 = -Di386
+
+CC = bcc -DCPLUSPLUS -DINLINEASM +cc.cfg 
+TASM = TASM /zi /ml
+TLIB = tlib
+TLINK = tlink
+SOURCE = ..\source
+LIBPATH = C:\bc45\LIB
+INCLUDEPATH = C:\bc45\INCLUDE;..\include
+
+#		*List Macros*
+libfiles =  args.obj ext.obj fatal.obj phitext.obj \
+ 	pstr.obj srchpath.obj usage.obj 
+miscfiles = cmain.obj symbol.obj memmgt.obj error.obj list.obj \
+  	mangle.obj bccstack.obj
+lexfiles = getsym.obj symchar.obj preproc.obj searchkw.obj
+parsefiles = floatexp.obj func.obj expr.obj init.obj intexpr.obj \
+	stmt.obj decl.obj types.obj
+optfiles = optimize.obj analyze.obj
+
+
+!ifdef i386
+codegenfiles =  inasm386.obj conf386.obj an386.obj reg386.obj gexpr386.obj peep386.obj gstmt386.obj 
+outputfiles = outas386.obj
+!else
+codegenfiles = inasm68.obj conf68.obj an68.obj reg68.obj gexpr68.obj peep68.obj  gstmt68.obj 
+outputfiles = outas68.obj
+!endif
+
+EXE_dependencies = $(libfiles) $(miscfiles) $(lexfiles) $(parsefiles) \
+	$(optfiles) $(codegenfiles) $(outputfiles)
+
+#		*Explicit Rules*
+# Note that noehl.lib is a C++ specific library
+# which is ONLY used to cut out some C++ specific code the borland
+# library includes.  Early versions of borland C++ compilers don't
+# have it.  Nothing is lost by deleting it from the library list.
+#
+cc.exe: cc.cfg $(EXE_dependencies)
+  $(TLINK) /v/x/c/P-/L$(LIBPATH) @&&|
+c0l.obj+
+ $(EXE_dependencies)
+cc.exe
+		# no map file
+noehl.lib mathl.lib cl.lib emu.lib
+|
+
+#		*Individual File Dependencies*
+bccstack.obj: $(SOURCE)\bccstack.c
+	$(CC) -c $(SOURCE)\bccstack.c
+inasm68.obj: $(SOURCE)\inasm68.c
+	$(CC) -c $(SOURCE)\inasm68.c
+inasm386.obj: $(SOURCE)\inasm386.c
+	$(CC) -c $(SOURCE)\inasm386.c
+outas68.obj: $(SOURCE)\outas68.c
+	$(CC) -c $(SOURCE)\outas68.c
+outas386.obj: $(SOURCE)\outas386.c
+	$(CC) -c $(SOURCE)\outas386.c
+outda68.obj: $(SOURCE)\outda68.c
+	$(CC) -c $(SOURCE)\outda68.c
+ieee695.obj: $(SOURCE)\ieee695.c
+	$(CC) -c $(SOURCE)\ieee695.c
+srchpath.obj: $(SOURCE)\srchpath.c
+	$(CC) -c $(SOURCE)\srchpath.c
+usage.obj: $(SOURCE)\usage.c
+	$(CC) -c $(SOURCE)\usage.c
+args.obj: $(SOURCE)\args.c
+	$(CC) -c $(SOURCE)\args.c
+ext.obj: $(SOURCE)\ext.c
+	$(CC) -c $(SOURCE)\ext.c
+fatal.obj: $(SOURCE)\fatal.c
+	$(CC) -c $(SOURCE)\fatal.c
+phitext.obj: $(SOURCE)\phitext.c
+	$(CC) -c $(SOURCE)\phitext.c
+pstr.obj: $(SOURCE)\pstr.c
+	$(CC) -c $(SOURCE)\pstr.c
+floatexp.obj: $(SOURCE)\floatexp.c
+	$(CC) -c $(SOURCE)\floatexp.c
+analyze.obj: $(SOURCE)\analyze.c
+	$(CC) -c $(SOURCE)\analyze.c
+error.obj: $(SOURCE)\error.c
+	$(CC) -c $(SOURCE)\error.c
+expr.obj: $(SOURCE)\expr.c
+	$(CC) -c $(SOURCE)\expr.c
+init.obj: $(SOURCE)\init.c
+	$(CC) -c $(SOURCE)\init.c
+optimize.obj: $(SOURCE)\optimize.c
+	$(CC) -c $(SOURCE)\optimize.c
+register.obj: $(SOURCE)\register.c
+	$(CC) -c $(SOURCE)\register.c
+func.obj: $(SOURCE)\func.c
+	$(CC) -c $(SOURCE)\func.c
+intexpr.obj: $(SOURCE)\intexpr.c
+	$(CC) -c $(SOURCE)\intexpr.c
+searchkw.obj: $(SOURCE)\searchkw.c
+	$(CC) -c $(SOURCE)\searchkw.c
+an68.obj: $(SOURCE)\an68.c
+	$(CC) -c $(SOURCE)\an68.c
+conf68.obj: $(SOURCE)\conf68.c
+	$(CC) -c $(SOURCE)\conf68.c
+reg68.obj: $(SOURCE)\reg68.c
+	$(CC) -c $(SOURCE)\reg68.c
+gexpr68.obj: $(SOURCE)\gexpr68.c
+	$(CC) -c $(SOURCE)\gexpr68.c
+peep68.obj: $(SOURCE)\peep68.c
+	$(CC) -c $(SOURCE)\peep68.c
+gstmt68.obj: $(SOURCE)\gstmt68.c
+	$(CC) -c $(SOURCE)\gstmt68.c
+reg386.obj: $(SOURCE)\reg386.c
+	$(CC) -c $(SOURCE)\reg386.c
+conf386.obj: $(SOURCE)\conf386.c
+	$(CC) -c $(SOURCE)\conf386.c
+an386.obj: $(SOURCE)\an386.c
+	$(CC) -c $(SOURCE)\an386.c
+gexpr386.obj: $(SOURCE)\gexpr386.c
+	$(CC) -c $(SOURCE)\gexpr386.c
+peep386.obj: $(SOURCE)\peep386.c
+	$(CC) -c $(SOURCE)\peep386.c
+gstmt386.obj: $(SOURCE)\gstmt386.c
+	$(CC) -c $(SOURCE)\gstmt386.c
+list.obj: $(SOURCE)\list.c
+	$(CC) -c $(SOURCE)\list.c
+stmt.obj: $(SOURCE)\stmt.c
+	$(CC) -c $(SOURCE)\stmt.c
+cmain.obj: $(SOURCE)\cmain.c
+	$(CC) -c $(SOURCE)\cmain.c
+memmgt.obj: $(SOURCE)\memmgt.c
+	$(CC) -c $(SOURCE)\memmgt.c
+preproc.obj: $(SOURCE)\preproc.c
+	$(CC) -c $(SOURCE)\preproc.c
+symbol.obj: $(SOURCE)\symbol.c
+	$(CC) -c $(SOURCE)\symbol.c
+mangle.obj: $(SOURCE)\mangle.c
+	$(CC) -c $(SOURCE)\mangle.c
+decl.obj: $(SOURCE)\decl.c
+	$(CC) -c $(SOURCE)\decl.c
+getsym.obj: $(SOURCE)\getsym.c
+	$(CC) -c $(SOURCE)\getsym.c
+types.obj: $(SOURCE)\types.c
+	$(CC) -c $(SOURCE)\types.c
+symchar.obj: $(SOURCE)\symchar.c
+	$(CC) -c $(SOURCE)\symchar.c
+#		*Compiler Configuration File*
+# You can enable preconfiled headers by using -Hfilename in the following
+# option list
+cc.cfg: 
+  copy &&|
+-A
+-ml
+-v
+-G
+-O
+-Og
+-Oe
+-Om
+-Ov
+-Ol
+-Ob
+-Op
+-Oi
+-Z
+-vi
+-w-ret
+-w-nci
+-w-inl
+-wpin
+-wamb
+-wamp
+-w-par
+-wasm
+-wcln
+-w-cpt
+-wdef
+-w-dup
+-w-pia
+-wsig
+-w-nod
+-w-ill
+-w-sus
+-wstv
+-wucp
+-wuse
+-w-ext
+-w-ias
+-w-ibc
+-w-pre
+-w-nst
+-w-pro
+-I$(INCLUDEPATH)
+-L$(LIBPATH)
+| cc.cfg

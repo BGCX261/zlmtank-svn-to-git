@@ -1,0 +1,186 @@
+/* Protogen Version 1.00 Saturday May 31, 1997  17:24:44 */
+
+                              /* Gexpr68.c */
+
+int chksize(int lsize, int rsize);
+AMODE    *make_label(int lab);
+AMODE    *makebf(ENODE *node, AMODE *ap1, int size);
+AMODE    *make_immed(long i);
+AMODE    *make_offset(ENODE *node);
+void tofloat(AMODE *ap,int size);
+void make_legal(AMODE *ap,int flags,int size);
+void doshift(int op, AMODE *ap2, AMODE *ap1, int size);
+void bit_legal(AMODE *ap,ENODE *node, int size);
+AMODE *get_bitval(AMODE *ap,ENODE *node, int size);
+void bit_move(AMODE *ap1, AMODE *ap2, ENODE *node, int flags, int sizein, int sizeout);
+void do_extend(AMODE *ap,int isize,int osize,int flags);
+int     isshort(ENODE *node);
+int     isbyte(ENODE *node);
+int isamshort(AMODE *ap);
+int isamshort2(AMODE *ap, AMODE *ap2);
+int isambyte(AMODE *ap);
+int isambyte2(AMODE *ap, AMODE *ap2);
+AMODE    *gen_index(int siz1,ENODE *node);
+AMODE    *gen_deref(ENODE *node, int flags,int size, int flag);
+AMODE    *gen_unary(ENODE *node,int flags,int size,int op, int fop);
+AMODE    *gen_binary(ENODE *node,int flags,int size,int op, int fop);
+AMODE    *gen_xbin(ENODE *node,int flags,int size,int op, int fop);
+AMODE    *gen_shift(ENODE *node, int flags, int size, int op);
+AMODE    *gen_modiv(ENODE *node, int flags, int size, int op, int modflag);
+void swap_nodes(ENODE *node);
+AMODE * gen_pdiv(ENODE *node, int flags, int size);
+AMODE * gen_pmul(ENODE *node, int flags, int size);
+AMODE    *gen_mul(ENODE *node, int flags, int size, int op);
+AMODE    *gen_hook(ENODE *node, int flags, int size);
+AMODE    *gen_asadd(ENODE *node, int flags, int size, int op, int fop);
+AMODE    *gen_aslogic(ENODE *node, int flags, int size, int op);
+AMODE *gen_asshift(ENODE *node, int flags, int size, int op);
+AMODE    *gen_asmul(ENODE *node, int flags, int size,int op);
+AMODE    *gen_asmodiv(ENODE *node, int flags, int size, int op, int modflag);
+AMODE *gen_moveblock(ENODE *node, int flags, int size);
+int count_regs(AMODE *ap1, AMODE *ap2);
+AMODE    *gen_assign(ENODE *node, int flags, int size);
+AMODE    *gen_refassign(ENODE *node, int flags, int size);
+AMODE    *gen_aincdec(ENODE *node, int flags, int size, int op);
+int push_param(ENODE *ep,int size);
+int push_stackblock(ENODE *ep);
+int     gen_parms(ENODE *plist,int size);
+AMODE    *gen_fcall(ENODE *node,int flags, int size);
+AMODE    *gen_pfcall(ENODE *node,int flags, int size);
+AMODE    *gen_expr(ENODE *node, int flags, int size);
+int     natural_size(ENODE *node);
+void gen_compare(ENODE *node, int btype1, int btype2, int btype3, int btype4, int label);
+void truejp(ENODE *node, int label);
+void falsejp(ENODE *node, int label);
+
+                              /* Gstmt68.c */
+
+void genstmtini(void);
+AMODE    *makedreg(int r);
+AMODE    *makeareg(int r);
+AMODE    *makefreg(int r);
+AMODE    *make_mask(int mask, int reverse, int floatflag);
+AMODE    *make_direct(int i);
+AMODE    *make_strlab(char *s);
+void genwhile(SNODE *stmt);
+void gen_for(SNODE *stmt);
+void genif(SNODE *stmt);
+void gendo(SNODE *stmt);
+void gen_genword(SNODE *stmt);
+AMODE *set_symbol(char *name, int isproc);
+AMODE *flush_for_libcall(void);
+AMODE *call_library(char *lib_name,int size);
+int analyzeswitch(SNODE *stmt);
+void bingen(int lower, int avg, int higher,AMODE *ap1, int deflab, int size, long *switchids, int *switchlabels, int *switchbinlabels);
+void genbinaryswitch(SNODE *stmt, int deflab);
+void gencompactswitch(SNODE *stmt, int deflab);
+void gencase(SNODE *stmt);
+void genxswitch(SNODE *stmt);
+void genreturn(SNODE *stmt,int flag);
+void genstmt(SNODE *stmt);
+void scppinit(void);
+void genfunc(SNODE *stmt);
+
+                              /* Outas68.c */
+
+void outcodeini(void);
+void datalink(int flag);
+void nl(void);
+void outop(char *name);
+void putop(int op);
+void putconst(ENODE *offset);
+void putlen(int l);
+void putamode(AMODE *ap);
+void put_code(OCODE *cd);
+void put_fmask(int mask, int reverse);
+void put_mask(int mask, int reverse);
+void putreg(int r);
+void gen_strlab(SYM *sp);
+void put_label(OCODE *cd);
+void put_staticlabel(long label);
+void genfloat(float val);
+void gendouble(double val);
+void genlongdouble(long double val);
+int genstring(char *str, int uselong);
+void genbyte(long val);
+void genword(long val);
+void genlong(long val);
+void gensrref(SYM *sp,int val);
+void genref(SYM *sp,int offset);
+void genpcref(SYM *sp,int offset);
+void genstorage(int nbytes);
+void gen_labref(int n);
+int     stringlit(char *s, int uselong);
+void dumplits(void);
+void cseg(void);
+void dseg(void);
+void bssseg(void);
+void startupseg(void);
+void rundownseg(void);
+void cppseg(void);
+void gen_virtual(char *name);
+void gen_endvirtual(char *name);
+void genlongref(DATALINK *p);
+void asm_header(void);
+void globaldef(SYM *sp);
+void putexterns(void);
+
+                              /* Peep68.c */
+
+void peepini(void);
+AMODE    *copy_addr(AMODE *ap);
+void gen_code(int op,int len,AMODE *ap1,AMODE *ap2);
+void gen_lea(int size, AMODE *ap1, AMODE * ap2);
+void gen_codelab(SYM *lab);
+void gen_line(SNODE *stmt);
+void gen_codef(int op, int len, AMODE *ap1, AMODE *ap2);
+void gen_code3(int op, int len, AMODE *ap1, AMODE *ap2, AMODE *ap3);
+void add_peep(OCODE *new);
+void gen_label(int labno);
+void flush_peep(void);
+void peep_move(OCODE *ip);
+int peep_tst(OCODE *ip);
+int     equal_address(AMODE *ap1, AMODE *ap2);
+void peep_add(OCODE *ip);
+void peep_sub(OCODE *ip);
+void     peep_cmp(OCODE *ip);
+void peep_muldiv(OCODE *ip, int op);
+void peep_uctran(OCODE *ip);
+void peep_label(OCODE *ip);
+void opt3(void);
+
+                               /* Reg68.c */
+
+void regini(void);
+void gen_push(int reg, int rmode, int flag);
+void gen_pop(int reg, int rmode, int flag);
+void initstack(void);
+void mark(void);
+void release(void);
+AMODE    *temp_data(void);
+AMODE    *temp_addr(void);
+AMODE    *temp_float(void);
+void freedata(int dreg);
+void freeaddr(int areg);
+void freeop(AMODE *ap);
+
+                               /* An68.c */
+
+void reserveregs(int *datareg, int *addreg, int *floatreg);
+void allocate(int datareg, int addreg, int floatreg, SNODE *block );
+
+                              /* Conf68.c */
+
+int confcodegen(char s, int bool);
+void confsetup(void);
+int     alignment(int type, TYP *tp);                             /* STATIC */
+int getalign(int sc, TYP *tp);
+long getautoval(long val);
+int funcvaluesize(int size);
+
+/* Protogen Version 1.00 Saturday May 31, 1997  17:24:47 */
+
+                              /* Inasm68.c */
+
+void inasmini(void);
+SNODE *asm_statement (int shortfin);

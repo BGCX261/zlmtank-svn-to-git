@@ -1,0 +1,126 @@
+#  Example, run mk386.exe a.c
+#  this MAKEFILE. generate MK386.EXE program
+#
+.AUTODEPEND
+.SWAP
+# LINK     = # define LINK for COMPILE, ASSEMBLE & LINK
+# ASSEMBLE = # define ASSEMBLE for COMPILE & ASSEMBLE
+# COMPILE  = # define COMPILER for ONLY COMPILE
+!ifndef LINK
+!ifndef ASSEMBLE
+!ifndef COMPILE
+LINK       =
+!endif
+!endif
+!endif
+# DEBUG    = # define DEBUG for debug info and debug startup module
+# MAP      = # define MAP for generate .MAP file
+# NODEFLIB = # define NODEFLIB for NO link default .OBJ & .LIB
+# KEEP_SRC = # define KEEP_SRC for save generate .ASM & .OBJ files
+# KEEP_LST = # define KEEP_LST for save generate .LST files
+
+                                       ### name of .EXE file
+NAME = A
+                                       ### define tools
+CC  = CC386.EXE
+AS  = TASM.EXE
+                                       ### define options for CC
+CC_INC = /ID:\BC\CC386\INCLUDE;
+CC_DEF = 
+CC_OPT = -i +e -A
+!ifdef KEEP_LST
+CC_OPT = $(CC_OPT) +l
+!endif
+
+CC = $(CC) $(CC_OPT) $(CC_DEF) $(CC_INC)
+                                       ### define options for AS
+AS_INC =  /iD:\BC\CC386\INCLUDE
+AS_DEF = 
+!ifdef DEBUG
+AS_OPT = /t /m3 /ml /zi
+!else
+AS_OPT = /t /m3 /ml /zn
+!endif
+!ifdef KEEP_LST
+AS_OPT = $(AS_OPT) /la
+!endif
+
+AS = $(AS) $(AS_OPT) $(AS_DEF) $(AS_INC)
+                                       ### .LIB & output .OBJ path
+PATH_LIB = D:\BC\CC386\LIB
+PATH_OBJ = .
+                                       ### default .OBJ & .LIB
+!ifdef NODEFLIB
+DEFAULT_OBJS =
+DEFAULT_LIBS =
+WLINK_OBJS   =
+WLINK_LIBS   =
+!else
+DEFAULT_LIBS = $(PATH_LIB)\CLDOS.LIB
+WLINK_LIBS   = library $(DEFAULT_LIBS)
+!ifdef DEBUG
+DEFAULT_OBJS = $(PATH_LIB)\C0DOSD.OBJ 
+!else
+DEFAULT_OBJS = $(PATH_LIB)\C0DOS.OBJ 
+!endif
+WLINK_OBJS   = file $(DEFAULT_OBJS)
+!endif
+                                       ### define macro for KEEP_SRC
+!ifdef KEEP_SRC
+DEL_SRC = @rem
+!else
+DEL_SRC = -del
+!endif
+                                       ### define macro for KEEP_LST
+!ifdef KEEP_LST
+DEL_LST = @rem
+!else
+DEL_LST = -del
+!endif
+                                       ### define macro for MAP
+!ifdef MAP
+TLINK_OPT = /3/d/c/m/l/s
+WLINK_OPT = option map
+!else
+TLINK_OPT = /3/d/c/x
+WLINK_OPT = 
+!endif
+                                       ### define macro for DEBUG
+!ifdef DEBUG
+TLINK_DBG = /v
+WLINK_DBG = debug option symf
+!else
+TLINK_DBG = 
+WLINK_DBG = option quiet
+!endif
+                                       ### .ASM files
+ASMS = \
+A.ASM \
+                                       ### .OBJ files
+OBJS = $(DEFAULT_OBJS) \
+$(PATH_OBJ)\A.OBJ \
+                                       ### .LIB files
+LIBS = $(DEFAULT_LIBS) \
+                                       ###  main make depend
+!ifdef LINK
+$(NAME).EXE : $(OBJS) $(LIBS) makefile.
+  TLINK.EXE @&&|
+$(TLINK_OPT) $(TLINK_DBG) $(OBJS), $(NAME), $(NAME), $(LIBS)
+|
+  $(DEL_SRC) $(PATH_OBJ)\A.OBJ
+!else
+!ifdef ASSEMBLE
+assemble : $(OBJS) 
+!else
+!ifdef COMPILE
+compile : $(ASMS) 
+!endif
+!endif
+!endif
+                                       ### files depend
+$(PATH_OBJ)\A.OBJ : A.ASM
+  $(AS) A.ASM,$(PATH_OBJ)\A.OBJ,$(PATH_OBJ)\A.LST,NUL
+  $(DEL_LST) $(PATH_OBJ)\A.LST
+  $(DEL_SRC) A.ASM
+A.ASM : A.C
+  $(CC) A.C

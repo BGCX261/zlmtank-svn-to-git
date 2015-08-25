@@ -1,0 +1,15 @@
+    Package of CL386 program :
+
+    README.1ST   This file
+    FILE_ID.DIZ  Descriptor for BBS
+    CL386E.TXT   DOC for CL386 (English)
+    CL386R.TXT   DOC for CL386 (Russian)
+    HISTORY.TXT  History
+    MAKE.BAT     Make CL386.EXE
+    TEST.BAT     Test for DOS errorlevel
+    CL386.C      Source of CL386
+    CL386.CFG    Config file for CL386.EXE 
+    CL386.EXE    Program
+    CC386.C      Test for free memory
+    D4GWSTUB.C   Source for DOS/4GW stub
+    D4GWSTUB.EXE Stub for DOS/4GW

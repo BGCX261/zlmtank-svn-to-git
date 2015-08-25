@@ -1,0 +1,62 @@
+Create v1.0
+	The first release...
+       
+Add to v2.0:
+	@filename options
+	set CL386= environment var
+	run CC386.EXE once for each file
+	run TASM.EXE once for each file
+	use TLINK.EXE response file TLINK.RSP (don't delete !)
+	check for overflow CMDLINE ( < 128 bytes )
+	delete limit for MAX_FILES what compile
+	free all allocated memory (if run Ok!)
+
+Add to v3.0:
+	/K option add ( keep response file )
+	/n option add ( no default library & obj file )
+	/a option add ( generate .ASM file )
+	/c option add ( generate .OBJ file )
+	run CC386.EXE, TASM.EXE & TLINK.EXE once !!!
+	use response files ( CC386.$$$, TASM.$$$, TLINK.$$$ )
+	add the correct work with .LIB files
+	/l option add ( generate .LST files)
+		Warning ! .LST files overwrite TASM.EXE, use with /a !!!
+	more memory for run CC386, TASM & TLINK
+	add C0DOSD.OBJ for /v option
+	correct work /m option
+
+Add to v3.01:
+	source change on 0.01% :)
+	i write .DOC files !!!
+	
+Add to v3.11:
+	/e option add ( generate .ERR file )
+
+Add to v3.12:
+	to TASM /m2 default option add ( compile in 2 Pass )
+	add tips about TASM v4.1 for DOS ( see DOC ! )
+	file update.txt renamed to history.txt
+
+Add to v3.2:
+	correct .TXT files
+	now CL386 return DOS errorlevel !
+
+Add to v4.0:
+	hmm, wildcards '*' and '?' in command line
+        delete generate .ASM & .OBJ file
+	can make TLINK+PMODE, WLINK+PMODE/W(DOS/4GW)
+	rewrite all source & put all in one 
+	add DOS/4GW stub
+
+Add to v4.1:
+	add /Rname option - set name of .EXE file
+	disable generate .LSA files, /l+ will enable
+	can compile with Watcom C/C++
+
+Add to v4.1d:
+	4.1d - David correct !
+	put .ASM & .OBJ files into current directiry
+
+Add to v4.1m:
+	add some free memory, program alloc ~33 Kb ()
+		{ v 1.0 ~28 Kb, v2.0 ~30 Kb, v3.0 ~30Kb }

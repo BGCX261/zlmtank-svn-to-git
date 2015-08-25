@@ -1,0 +1,170 @@
+#####################################################################
+#                     CL386.DOC (English)                           # 
+#####################################################################
+
+0. Introduction.
+     0.1 CL386, what can it do ?
+     0.2 CL386, what is it like ?
+1. How CL386 works?
+     1.1 What is need for CL386?
+     1.1 Algorithm of work CL386.
+     1.2 Remarks on use.
+     1.3 Errorlevels.
+2. Option of CL386.
+A. Appendix.
+     A.0 Tips for using TASM v4.1 for DOS !!!
+     A.1 Warranty.
+     A.2 Copyright.
+     A.3 How to contact to the author?
+
+#####################################################################
+
+
+0. Introduction.
+**************** 
+
+0.1 CL386, what can it do ?
+
+CL386 is a  program -  shell for  compile,  assemble and link.  It  is
+written specially for ‘‘386.EXE, but can be used with other programs.
+CL386  works in MS-DOS, but  if you written system depend _splitpath()
+and _makepath(), there are no obstacles for work under other OS.
+
+0.2 CL386, what is it like ?
+
+Analogs CL386 is: CL.EXE (Microsoft/VisualC/C++ ), BCC.EXE (Borland C/C++),
+WCL.EXE (Watcom C/C++), SC.EXE (Symantec C/C++).
+
+
+1. How CL386 works?
+******************* 
+
+1.1 What is need for CL386?
+
+For CL386 are necessary next files: CC386.EXE, TASM.EXE and link :
+TLINK.EXE or WLINK.EXE . Check (or add) path to these programs in 
+environment variable PATH !
+
+1.1 Algorithm of operation CL386.
+
+1)  At first  parameters are  read.  The  parameters are  filename  or
+option. Parameters you can set in: 
+- configuration file CL386.CFG. If you rename CL386.EXE to <name>.EXE;
+in the <name>.CFG file.  The search of the  configuration file  passes
+in such sequence: in  the current directory, and  if not found -  that
+in the directory, from which start CL386.EXE. 
+- variable of environment CL386  . Add, for example,  in AUTOEXEC.BAT
+SET CL386 =...  also don't worry about parameters by default...:)
+- in command line. Also, file can with wildcards '*' and '?' !
+2) Them generate files CC386.$$$, TASM.$$$ and LINK.$$$ for a response
+in appropriate programs.
+3) Are called CC386.EXE, TASM.EXE and TLINK.EXE (WLINK.EXE) before 
+appearance of an error !!! 
+4) If there  are no parameters  in command line  or the option  /?  is
+found or not files, the brief help about options is output.
+
+1.2 Remark.
+
+- For  work with large  count of  files use option  '@filename' ,  and
+place in  'filename'  the  list of  files and  options,  separated  by
+blanks or character '\n'; 
+- Use an option /K for review of files CC386.$$$, TASM.$$$ and LINK.$$$;
+- Use an option /v for make the debug version of the program;
+- Do not add an option /? in CL386.CFG or in environment variable CL386;
+- Default .LST & .LSA disable, for enable use /l ;
+- I output listing file .ASM with extention .LSA
+
+1.3 Errorlevels.
+
+Program return next exitcode :
+
+	  0  - Ok
+	128  - Fatal error ( "Out of memory", etc )
+	129  - Problem with files ( open, write etc )
+	
+Also return errorlevel's CC386, TASM & TLINK(WLINK) !
+
+2. Option CL386.
+***************
+
+/i      - produce the file after the preprocessor,
+    there can be /i+ or /i-, /i that, as /i+;
+/l      - produce .LST the file, 
+    there can be /l+ or /l-, /l that,as /l+;
+/e      - produce .ERR the file, 
+    there can be /e+ or /e-, /e that,as /e+;
+/A      - enable ANSI compatibility, 
+    there can be /A+ or /A-, /A that, as /A+;
+/w-xxx  - disable warnings, look documentation on CC386.EXE;
+/Cxxx   - option for generation of the code,
+    look documentation on CC386.EXE;
+/Dxxx   - define symbol for the preprocessor,
+    look documentation on CC386.EXE;
+/Enn    - define max count of errors for CC386;
+/Ipath  - set path to included files;
+/Oxxx   - option for optimization, look documentation on CC386.EXE;
+@name   - define the file with parameters for response;
+/K      - not delete files CC386.$$$, TASM.$$$ and LINK.$$$;
+    there can be /K+ or /K-, /K that, as /K+;
+/Lxxx   - set path to files .LIB and .OBJ;
+/a      - generate only .ASM files;
+/c      - generate only .OBJ files;
+/v      - full the debugging information and debug version;
+/m      - generate .MAP the file;
+/n      - not link files by default;
+/k      - not delete files *.ASM & *.OBJ;
+    there can be /k+ or /k-, /k that, as /k+;
+/Tp     - use for link TLINK with PMODE
+/Tl     - use for link TLINK with PMODE, 
+    startup module NOT copy to DPMI mem
+/Tw     - use for link WLINK with PMODE/W
+/Td     - use for link WLINK with stub D4GWSTUB ( call DOS/4GW )
+/Rname  - set name to .EXE file
+/?,/h,/H - help.
+
+
+A. Appendix
+***********
+
+A.0 Tips for using TASM v4.1 for DOS !!!
+
+Don't use TASM v4.1 !!! For example compile with TASM v4.1 :
+
+============================================= 1.ASM
+        .model tiny
+        .code
+        .386
+start:
+        rept 1024
+        local hi
+        jc hi
+hi:
+        endm
+        end start
+=============================================
+
+	tasm /m2 1.ASM
+	tlink /3/c/t 1.OBJ
+
+and see in disassembler code in 1.COM :(
+
+A.1 Warranty.
+
+The program CL386 is FREEWARE and is delivered with source codes.  The
+author does not  bear ANY  responsibility for damage  brought by  this
+program. You use this program at own risk!!!
+
+A.2 Copyright.
+
+(c) CL386 Kirill Joss
+(c) CC386 David Lindauer (gclind01 starbase.spd.louisville.edu)
+
+A.3 How to contact to the author?
+
+Your sentences and wishes send on addresses:
+
+Kirill Joss
+E-mail: jk@zi3.cyb.univ.kiev.ua
+     Or
+FidoNet:     2:463/218.12
+     AKA     2:463/59.29
